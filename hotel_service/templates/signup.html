@@ -1,0 +1,52 @@
+<!-- templates/signup.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container d-block h-100 pt-2">
+    <div class="card">
+        <h5 class="card-header">Sign Up</h5>
+        <div class="card-body">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-danger">{{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.</div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/signup">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" class="form-control border-secondary" name="first_name" id="first_name" placeholder="First Name" autocomplete="off">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control border-secondary" name="last_name" id="last_name" placeholder="Last Name" autocomplete="off">
+                        </div>
+            
+                    </div>
+                </div>
+            
+                <div class="mb-3">
+                    <input type="email" class="form-control border-secondary" name="email" id="email" placeholder="Email" autocomplete="off">
+                </div>
+
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" class="form-control border-secondary" name="username" id="username" placeholder="Username" autocomplete="off">
+                        </div>
+                        <div class="col-6">
+                            <input type="password" class="form-control border-secondary" name="password" id="password" placeholder="Password" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

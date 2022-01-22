@@ -1,0 +1,61 @@
+<!-- templates/index.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Country</th>
+      <th scope="col">City</th>
+      <th scope="col">State</th>
+      <th scope="col">Zipcode</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Room Size</th>
+      <th scope="col">Max Persons</th>
+      <th scope="col">Max Adults</th>
+      <th scope="col">Max Children</th>
+      <th scope="col">Price</th>
+      <th scope="col">Smoking</th>
+      <th scope="col">Pets</th>
+      <th scope="col">Pets</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if listings|length == 0 %}
+      <tr>
+        <td colspan="4">No listings</td>
+      </tr>
+    {% else %}
+      {% for item in listings %}
+        <tr>
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.address}}</td>
+          <td>{{item.country}}</td>
+          <td>{{item.city}}</td>
+          <td>{{item.state}}</td>
+          <td>{{item.zipcode}}</td>
+          <td>{{item.phone}}</td>
+          <td>{{item.qty}}</td>
+          <td>{{item.room_size}}</td>
+          <td>{{item.max_persons}}</td>
+          <td>{{item.max_adults}}</td>
+          <td>{{item.max_children}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.smoking_allowed}}</td>
+          <td>{{item.pets_allowed}}</td>
+          <td>{{item.reserved}}</td>
+          <td><a href="{{url_for('main.listing', id=item.id)}}">view</a></td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

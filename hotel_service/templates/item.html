@@ -1,0 +1,122 @@
+<!-- templates/item.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-block h-100 pt-2">
+    <div class="card">
+        <h3 class="card-header">{{item.name}}</h3>
+        <div class="card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{% if category == 'error' %}danger{% else %}success{% endif %}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            {% if item %}
+                <input type="text" id="id" value="{% if item %}{{item.id}}{% endif %}" style="display: none;" />
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>address</td><td>{{item.address}}</td></tr>
+                        <tr><td>country</td><td>{{item.country}}</td></tr>
+                        <tr><td>city</td><td>{{item.city}}</td></tr>
+                        <tr><td>state</td><td>{{item.state}}</td></tr>
+                        <tr><td>zipcode</td><td>{{item.zipcode}}</td></tr>
+                        <tr><td>phone</td><td>{{item.phone}}</td></tr>
+                        <tr><td>qty</td><td>{{item.qty}}</td></tr>
+                        <tr><td>room_size</td><td>{{item.room_size}}</td></tr>
+                        <tr><td>max_persons</td><td>{{item.max_persons}}</td></tr>
+                        <tr><td>max_adults</td><td>{{item.max_adults}}</td></tr>
+                        <tr><td>max_children</td><td>{{item.max_children}}</td></tr>
+                        <tr><td>price</td><td>${{item.price}}</td></tr>
+                        <tr><td>smoking_allowed</td><td class="{% if item.smoking_allowed == True %}table-primary{% else %}table-warning{% endif %}">{{item.smoking_allowed}}</td></tr>
+                        <tr><td>pets_allowed</td><td class="{% if item.pets_allowed == True %}table-primary{% else %}table-warning{% endif %}">{{item.pets_allowed}}</td></tr>
+                        <tr><td>reserved</td><td class="{% if item.reserved == False %}table-success{% else %}table-danger{% endif %}">{{item.reserved}}</td></tr>
+                        <tr><td>reserved_by</td><td>{{item.reserved_by}}</td></tr>
+                    </tbody>
+                </table>
+
+                
+                <h4>Reservation</h4>
+                <ul class="list-group list-group-flush">
+                    {% if item.reserved == False %}
+                    <h5>Reserve Listing</h5>
+                    <li class="list-group-item">
+                        <div class="input-group">
+                            <input type="text" class="form-control date-select" id="check-in" placeholder="Check-in" readonly="readonly" autocomplete="off">
+                        </div>
+                    </li>
+					<li class="list-group-item">
+                        <div class="input-group">
+                            <input type="text" class="form-control date-select" id="check-out" placeholder="Check-out" readonly="readonly" autocomplete="off">
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-grid gap-2">
+                            <button type="button" id="reserve" class="btn btn-success btn-block" disabled>Reserve</button>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    {% if item.reserved_by == current_user.username %}
+                    <li class="list-group-item">
+                        <div class="d-grid gap-2">
+                            <button type="button" id="unreserve" class="btn btn-danger">Unreserve</button>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+$(function() {
+    // Initializing the datetimepickers
+    let date_format = 'm-d-Y';
+    $('#check-in').datetimepicker({
+        format: date_format,
+        onShow: function(ct) {
+            let check_out = $('#check-out').val();
+            this.setOptions({
+                maxDate: check_out ? check_out : false
+            });
+        },
+        timepicker: false,
+    });
+    $('#check-out').datetimepicker({
+        format: date_format,
+        onShow: function(ct) {
+            let check_in = $('#check-in').val();
+            this.setOptions({
+                minDate: check_in ? check_in : false
+            });
+        },
+        timepicker: false,
+    });
+    $('#check-in, #check-out').on('change', function(e) {
+        let invalid_dates = $('#check-in, #check-out').filter(function() { return !this.value; });
+        if(invalid_dates.length == 0) {
+            $('#reserve').prop('disabled', false);
+        } else {
+            $('#reserve').prop('disabled', true);
+        }
+    });
+
+    $('#reserve').on('click', function(e) {
+        window.location.pathname = `/listing/${$('#id').val()}/reserve/${$('#check-in').val()}/${$('#check-out').val()}`;
+    });
+    $('#unreserve').on('click', function(e) {
+        window.location.pathname = `/listing/${$('#id').val()}/unreserve`;
+    });
+});
+
+</script>
+{% endblock %}
